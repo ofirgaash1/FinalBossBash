@@ -31,6 +31,8 @@ if [ $rootAndNotInteractive = "true" ]; then
     days_threshold=17
 
     seconds_threshold=$((days_threshold * 86400))
+    declare -a files_to_delete
+    total_size=0
 
     for directory in $directories; do
         for file in "$directory"/**; do
@@ -46,8 +48,9 @@ if [ $rootAndNotInteractive = "true" ]; then
 
                 # Check if the file is older than the threshold
                 if [ $last_modification_in_days -ge $days_threshold ]; then
-                    echo "Deleting $file modified $last_modification_in_days days ago."
-                    rm "$file"
+                    read -r -a file_info <<< "$(wc -c "$file")"
+                    files_to_delete+=("${file_info[@]}")
+                    total_size=$((total_size + ${file_info[0]}))
                 fi
 
             fi
