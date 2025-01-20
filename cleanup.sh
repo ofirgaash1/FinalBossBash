@@ -7,6 +7,7 @@ if [ "$(id -u)" -eq 0 ]; then
     # Check if the script is running interactively
     if [[ -t 0 ]]; then
         echo "Running interactively."
+        rootAndNotInteractive=false
     else
         rootAndNotInteractive=true
     fi
@@ -14,7 +15,8 @@ else
     echo "Not running as root, script may not have all required privileges."
 fi
 
-rootAndNotInteractive=true
+rootAndNotInteractive=true #                         DONT FORGET TO REMOVE THIS SHIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+
 # rootAndNotInteractive essentially means it's running as crontab operation (?)
 if [ $rootAndNotInteractive = "true" ]; then
     shopt -s globstar
@@ -36,7 +38,7 @@ if [ $rootAndNotInteractive = "true" ]; then
             # Continue only if it is a file
             if [ -f "$file" ]; then
 
-                # last mod in sec since the epoch
+                # last mod in sec since the epoch.    VLAD - NOTE THAT %Y CHANGES WHEN *DATA* IS MODIFIED, NOT METADATA
                 last_modification_seconds=$(stat --format=%Y "$file")
 
                 # last mod since now in days
@@ -47,7 +49,7 @@ if [ $rootAndNotInteractive = "true" ]; then
                     echo "Deleting $file modified $last_modification_in_days days ago."
                     rm "$file"
                 fi
-                
+
             fi
         done
     done
