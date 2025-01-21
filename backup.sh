@@ -22,3 +22,5 @@ format="+%Y_%m_%d_%H_%M_%S_home_backup.tar.gzip"
 date_formated_string="$(date "$format")"
 
 tar czf "/opt/sysmonitor/backups/$date_formated_string" --ignore-failed-read $TARGET 2>/dev/null 2>&1
+
+"backup.sh: home backed-up successfully. $(date)" >>/var/log/backup.log
