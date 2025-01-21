@@ -43,7 +43,7 @@ select option in "${options[@]}"; do
         /usr/local/bin/cleanup.sh
         ;;
     "${options[4]}")
-        processes()  ############################################ TODO
+        processes()
         ;;
     "${options[5]}")
         exit 0
