@@ -18,8 +18,6 @@ fi
 
 shopt -s globstar
 
-
-
 # Current date in seconds since the epoch
 current_seconds=$(date +%s)
 
