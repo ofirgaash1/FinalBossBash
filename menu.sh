@@ -1,3 +1,22 @@
+#!/usr/bin/bash
+
+# Check if running as root
+if [ "$(id -u)" -eq 0 ]; then
+    echo "Running as root."
+
+    # Check if the script is running interactively
+    if [[ -t 0 ]]; then
+        echo "Running interactively as root."
+        interactive=true
+    else
+        echo "the menu can only run interactively"
+        exit 1
+    fi
+else
+    echo "please run this script as root".
+    exit 1
+fi
+
 echo 'Welcome stranger'
 PS3='~Select an option habub: '
 options=(
@@ -24,10 +43,14 @@ select option in "${options[@]}"; do
         /usr/local/bin/cleanup.sh
         ;;
     "${options[4]}")
-        proccesses()  ############################################ TODO
+        processes()  ############################################ TODO
         ;;
     "${options[5]}")
         exit 0
         ;;
     esac
 done
+
+processes() {
+    echo "number of current processes running in the system: $(( $(ps auxh | wc -l) -2 ))"
+}
