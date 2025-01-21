@@ -21,15 +21,15 @@ shopt -s globstar
 # Current date in seconds since the epoch
 current_seconds=$(date +%s)
 
-# directories mentioned by vlad, seperated by spaces
-directories="/tmp /var/tm /var/log"
-
 # Days threshold for file modification, as mentioned by vlad
 days_threshold=17
 
 seconds_threshold=$((days_threshold * 86400))
 declare -a files_to_delete
 total_size=0
+
+# directories mentioned by vlad, seperated by spaces
+directories="/tmp /var/tm /var/log"
 
 for directory in $directories; do
     for file in "$directory"/**; do
