@@ -45,7 +45,7 @@ for directory in $directories; do
 
             # Check if the file is older than the threshold
             if [ $last_modification_in_days -ge $days_threshold ]; then
-                read -r -a file_info <<< "$(wc -c "$file")"
+                read -r -a file_info <<<"$(wc -c "$file")"
                 files_to_delete+=("${file_info[@]}")
                 total_size=$((total_size + ${file_info[0]}))
             fi
