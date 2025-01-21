@@ -7,53 +7,70 @@ if [ "$(id -u)" -eq 0 ]; then
     # Check if the script is running interactively
     if [[ -t 0 ]]; then
         echo "Running interactively."
-        rootAndNotInteractive=false
+        interactive=true
     else
-        rootAndNotInteractive=true
+        notInteractive=true
     fi
 else
-    echo "Not running as root, script may not have all required privileges."
+    echo "please run this script as root".
+    exit 1
 fi
 
-rootAndNotInteractive=true #                         DONT FORGET TO REMOVE THIS SHIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+shopt -s globstar
 
-# rootAndNotInteractive essentially means it's running as crontab operation (?)
-if [ $rootAndNotInteractive = "true" ]; then
-    shopt -s globstar
 
-    # directories mentioned by vlad, seperated by spaces
-    directories="/tmp /var/tm /var/log"
 
-    # Current date in seconds since the epoch
-    current_seconds=$(date +%s)
+# Current date in seconds since the epoch
+current_seconds=$(date +%s)
 
-    # Days threshold for file modification, as mentioned by vlad
-    days_threshold=17
+# directories mentioned by vlad, seperated by spaces
+directories="/tmp /var/tm /var/log"
 
-    seconds_threshold=$((days_threshold * 86400))
-    declare -a files_to_delete
-    total_size=0
+# Days threshold for file modification, as mentioned by vlad
+days_threshold=17
 
-    for directory in $directories; do
-        for file in "$directory"/**; do
+seconds_threshold=$((days_threshold * 86400))
+declare -a files_to_delete
+total_size=0
 
-            # Continue only if it is a file
-            if [ -f "$file" ]; then
+for directory in $directories; do
+    for file in "$directory"/**; do
 
-                # last mod in sec since the epoch.    VLAD - NOTE THAT %Y CHANGES WHEN *DATA* IS MODIFIED, NOT METADATA
-                last_modification_seconds=$(stat --format=%Y "$file")
+        # Continue only if it is a file
+        if [ -f "$file" ]; then
 
-                # last mod since now in days
-                last_modification_in_days=$(((current_seconds - last_modification_seconds) / 86400))
+            # last mod in sec since the epoch.    VLAD - NOTE THAT %Y CHANGES WHEN *DATA* IS MODIFIED, NOT METADATA
+            last_modification_seconds=$(stat --format=%Y "$file")
 
-                # Check if the file is older than the threshold
-                if [ $last_modification_in_days -ge $days_threshold ]; then
-                    read -r -a file_info <<< "$(wc -c "$file")"
-                    files_to_delete+=("${file_info[@]}")
-                    total_size=$((total_size + ${file_info[0]}))
-                fi
+            # last mod since now in days
+            last_modification_in_days=$(((current_seconds - last_modification_seconds) / 86400))
 
+            # Check if the file is older than the threshold
+            if [ $last_modification_in_days -ge $days_threshold ]; then
+                read -r -a file_info <<< "$(wc -c "$file")"
+                files_to_delete+=("${file_info[@]}")
+                total_size=$((total_size + ${file_info[0]}))
             fi
+
+        fi
+    done
+done
+
+# Check total size against threshold of 10 MiB (10485760 bytes)
+if [[ $total_size -gt 10485760 && "$interactive" = "true" ]]; then
+    echo "Total size of old files to delete is greater than 10 MiB."
+    read -p "are you sure you want to delete these files? (yes/no) " user_input
+    if [[ "$user_input" = "yes" ]]; then
+        for file_data in "${files_to_delete[@]}"; do
+            echo "Deleting ${file_data[1]}."
+            rm "${file_data[1]}"
         done
+    else
+        echo "Deletion aborted by user."
+    fi
+elif [ "$notInteractive" = "true" ]; then
+    for file_data in "${files_to_delete[@]}"; do
+        echo "Deleting ${file_data[1]}."
+        rm "${file_data[1]}"
     done
 fi
