@@ -9,7 +9,6 @@ if [ "$(id -u)" -eq 0 ]; then
     # Check if the script is running interactively
     if [[ -t 0 ]]; then
         echo "Running interactively."
-        if
         interactive=true
     else
         notInteractive=true
@@ -19,8 +18,8 @@ else
     exit 1
 fi
 
-if [ $manualBackupORshowLastFiveLogs = "manualBackup" || notInteractive = "true"]; then
-        
+if [ $manualBackupORshowLastFiveLogs = "manualBackup" || $notInteractive = "true"]; then
+
     TARGET='/home'
 
     # Read total size in bytes of a directory into array
