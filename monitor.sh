@@ -16,4 +16,6 @@ else
     exit 1
 fi
 
-if [$notInteractive = "true"]; then
+if [ $notInteractive = "true" ]; then
+    
+fi
