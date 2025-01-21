@@ -17,6 +17,11 @@ else
     exit 1
 fi
 
+processes() {
+    echo "number of current processes running in the system: $(( $(ps auxh | wc -l) -2 ))"
+}
+
+
 echo 'Welcome stranger'
 PS3='~Select an option habub: '
 options=(
@@ -51,6 +56,3 @@ select option in "${options[@]}"; do
     esac
 done
 
-processes() {
-    echo "number of current processes running in the system: $(( $(ps auxh | wc -l) -2 ))"
-}
