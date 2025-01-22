@@ -2,8 +2,6 @@
 
 # Check if running as root
 if [ "$(id -u)" -eq 0 ]; then
-    echo "Running as root."
-
     # Check if the script is running interactively
     if [[ -t 0 ]]; then
         echo "Running interactively as root."
@@ -21,6 +19,7 @@ processes() {
     echo "number of current processes running in the system: $(($(ps auxh | wc -l) - 2))"
 }
 
+echo
 echo 'Welcome stranger'
 PS3='~Select an option habub: '
 options=(
