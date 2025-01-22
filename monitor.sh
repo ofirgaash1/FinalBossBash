@@ -12,6 +12,8 @@ else
     exit 1
 fi
 
+echo
+
 # sed: stream editor
 # 2p: second line
 # free -b gives ram stats with a nice readable format
@@ -59,6 +61,8 @@ if [[ $1 = "interactive" && $logExists = "true" ]]; then
     else
         trendCPU="rise"
     fi
+
+    difMEM=$(($MEMprecents - ${last_log_entry[1]}))
 
     if [ "$difMEM" -lt 0 ]; then
         trendMEM="fall"
