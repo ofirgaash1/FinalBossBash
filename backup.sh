@@ -5,14 +5,6 @@ manualBackupORshowLastFiveLogs=$1
 # Check if running as root
 if [ "$(id -u)" -eq 0 ]; then
     echo "Running as root."
-
-    # Check if the script is running interactively
-    if [[ -t 0 ]]; then
-        echo "Running interactively."
-        interactive=true
-    else
-        notInteractive=true
-    fi
 else
     echo "please run this script as root".
     exit 1
@@ -37,7 +29,7 @@ for file in /opt/sysmonitor/backups/; do
     fi
 done
 
-if [ $manualBackupORshowLastFiveLogs = "manualBackup" || $notInteractive = "true"]; then
+if [ $manualBackupORshowLastFiveLogs = "manualBackup" || $1 = "scheduled"]; then
 
     TARGET='/home'
 
