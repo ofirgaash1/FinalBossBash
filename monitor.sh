@@ -66,5 +66,5 @@ if [ $1 = "interactive" ]; then
     echo "Tx/Rx bytes: $tx/$rx"
 
 else
-    $lineForLog >>/var/log/monitor.log
+    echo "$lineForLog" >>/var/log/monitor.log
 fi
