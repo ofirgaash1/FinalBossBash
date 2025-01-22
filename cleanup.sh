@@ -3,18 +3,12 @@
 # Check if running as root
 if [ "$(id -u)" -eq 0 ]; then
     echo "Running as root."
-
-    # Check if the script is running interactively
-    if [[ -t 0 ]]; then
-        echo "Running interactively."
-        interactive=true
-    else
-        notInteractive=true
-    fi
 else
     echo "please run this script as root".
     exit 1
 fi
+
+# $1 is interactive or none
 
 shopt -s globstar
 
@@ -55,7 +49,7 @@ for directory in $directories; do
 done
 
 # Check total size against threshold of 10 MiB (10485760 bytes)
-if [[ $total_size -gt 10485760 && "$interactive" = "true" ]]; then
+if [[ $total_size -gt 10485760 && "$1" = "interactive" ]]; then
     echo "Total size of old files to delete is greater than 10 MiB."
     read -p "are you sure you want to delete these files? (yes/no) " user_input
     if [[ "$user_input" = "yes" ]]; then
@@ -66,7 +60,7 @@ if [[ $total_size -gt 10485760 && "$interactive" = "true" ]]; then
     else
         echo "Deletion aborted by user."
     fi
-elif [ "$notInteractive" = "true" ]; then
+elif [ "$1" = "scheduled" ]; then
     for file_data in "${files_to_delete[@]}"; do
         echo "Deleting ${file_data[1]}."
         rm "${file_data[1]}"
