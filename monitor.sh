@@ -45,18 +45,25 @@ if [ $1 = "interactive" ]; then
 
     read -r -a last_log_entry <<<"$(tail -1 "/var/log/monitor.log" | cut -d ']' -f 2)"
 
-    dif=$(($cpu_usage - ${last_log_entry[0]}))
+    difCPU=$(($cpu_usage - ${last_log_entry[0]}))
 
-    if [[ "$dif" = -* ]]; then
-        trend="rise"
+    if [[ "$difCPU" = -* ]]; then
+        trendCPU="rise"
     else
-        trend="fall"
+        trendCPU="fall"
     fi
 
+    difMEM=$(($MEMprecents - ${last_log_entry[1]}))
+
+    if [[ "$difMEM" = -* ]]; then
+        trendMEM="rise"
+    else
+        trendMEM="fall"
+    fi
     echo "Current system metrics:"
-    echo "CPU usage: $cpu_usage% , and the trend is $trend"
-    Memory usage: current – 17.21% trend - fall
-    Tx/Rx bytes: 29301743/3401238
+    echo "CPU usage: $cpu_usage% , and the trend is a $trendCPU"
+    echo "Memory usage: current – $MEMprecents%, and the trend is a $trendMEM"
+    echo "Tx/Rx bytes: $tx/$rx"
 
 else
     $lineForLog >>/var/log/monitor.log
