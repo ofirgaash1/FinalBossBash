@@ -1,7 +1,5 @@
 #!/usr/bin/bash
 
-manualBackupORshowLastFiveLogs=$1
-
 # Check if running as root
 if [ "$(id -u)" -eq 0 ]; then
     echo "Running as root."
@@ -31,7 +29,8 @@ for file in /opt/sysmonitor/backups/*; do
     fi
 done
 
-if [ $manualBackupORshowLastFiveLogs = "manualBackup" || $1 = "scheduled"]; then
+if [ "$1" = "manualBackup" ] || [ "$1" = "scheduled" ]; then
+
 
     TARGET='/home'
 
@@ -58,7 +57,7 @@ if [ $manualBackupORshowLastFiveLogs = "manualBackup" || $1 = "scheduled"]; then
 
     "backup.sh: home backed-up successfully. $(date)" >>/var/log/backup.log
 
-elif [ "$manualBackupORshowLastFiveLogs" = "showLastFiveLogs" ]; then
+elif [ "$1" = "showLastFiveLogs" ]; then
 
     file_name='/var/log/backup.log'
 
