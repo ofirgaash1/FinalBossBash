@@ -46,7 +46,7 @@ if [[ -s "/var/log/monitor.log" ]]; then
     logExists="true"
 fi
 
-if [ $1 = "interactive" && $logExists = "true" ]; then
+if [[ $1 = "interactive" && $logExists = "true" ]]; then
 
     read -r -a last_log_entry <<<"$(tail -1 "/var/log/monitor.log" | cut -d ']' -f 2)"
 
