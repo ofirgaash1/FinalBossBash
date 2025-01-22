@@ -40,22 +40,25 @@ done
 
 lineForLog="[$(date)] $cpu_usage $MEMprecents% $tx $rx"
 
-if [ $1 = "interactive" ]; then
-    echo $lineForLog
+# -s option returns true when file exists and not empty
+logExists="false"
+if [[ -s "/var/log/monitor.log" ]]; then
+    logExists="true"
+fi
+
+if [ $1 = "interactive" && $logExists = "true" ]; then
 
     read -r -a last_log_entry <<<"$(tail -1 "/var/log/monitor.log" | cut -d ']' -f 2)"
 
     difCPU=$(($cpu_usage - ${last_log_entry[0]}))
 
-    if [[ "$difCPU" = -* ]]; then
+    if [ "$difCPU" -lt 0 ]; then
         trendCPU="fall"
     else
         trendCPU="rise"
     fi
 
-    difMEM=$(($MEMprecents - ${last_log_entry[1]}))
-
-    if [[ "$difMEM" = -* ]]; then
+    if [ "$difMEM" -lt 0 ]; then
         trendMEM="fall"
     else
         trendMEM="rise"
@@ -64,7 +67,7 @@ if [ $1 = "interactive" ]; then
     echo "CPU usage: $cpu_usage% , and the trend is a $trendCPU"
     echo "Memory usage: current – $MEMprecents%, and the trend is a $trendMEM"
     echo "Tx/Rx bytes: $tx/$rx"
-
 else
     echo "$lineForLog" >>/var/log/monitor.log
+    echo "$lineForLog"
 fi
