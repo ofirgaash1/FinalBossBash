@@ -31,10 +31,10 @@ read -r -a cpu_usage_a <<<"$(vmstat | sed -n 3p)"
 idle_time="${cpu_usage_a[-3]}"
 cpu_usage=$((100 - $idle_time))
 
-for interface in /sys/class/net; do
-    if [[ -d /sys/class/net/$interface/device ]]; then
-        tx=$(<"/sys/class/net/$interface/statistics/rx_bytes")
-        rx=$(<"/sys/class/net/$interface/statistics/tx_bytes")
+for interface in /sys/class/net/*; do
+    if [[ -d $interface/device ]]; then
+        tx=$(<"$interface/statistics/tx_bytes")
+        rx=$(<"$interface/statistics/rx_bytes")
     fi
 done
 
