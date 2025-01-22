@@ -47,7 +47,9 @@ if [ "$1" = "manualBackup" ] || [ "$1" = "scheduled" ]; then
     echo "You have total $available_free_space_in_bytes free bytes on /"
 
     if [ $dir_size_in_bytes -lt $available_free_space_in_bytes ]; then
-        "backup.sh: no enough space for a backup. $(date)" >>/var/log/backup.log
+        echo "backup.sh: no enough space for a backup. $(date)" >> /var/log/backup.log
+        echo "backup.sh: no enough space for a backup. $(date) (logged)"
+        echo
         exit 1
     fi
 
