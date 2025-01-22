@@ -4,7 +4,7 @@
 if [ "$(id -u)" -eq 0 ]; then
     echo "Running as root."
 else
-    echo "please run this script as root".
+    echo "please run this script as root"
     exit 1
 fi
 
@@ -22,7 +22,7 @@ seconds_threshold=$((days_threshold * 86400))
 declare -a files_to_delete
 total_size=0
 
-# directories mentioned by vlad, seperated by spaces
+# directories mentioned by vlad, separated by spaces
 directories="/tmp /var/tmp /var/log"
 
 for directory in $directories; do
