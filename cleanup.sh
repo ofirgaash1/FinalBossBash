@@ -35,8 +35,7 @@ for directory in $directories; do
             last_modification_seconds=$(stat --format=%Y "$file")
 
             # last mod since now in days
-            last_modification_in_days=$( ((current_seconds - last_modification_seconds) / 86400))
-
+            last_modification_in_days=$( ((current_seconds - last_modification_seconds) / 86400) )
             # Check if the file is older than the threshold
             if [ $last_modification_in_days -ge $days_threshold ]; then
                 read -r -a file_info <<<"$(wc -c "$file")"
