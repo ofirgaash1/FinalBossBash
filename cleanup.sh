@@ -10,6 +10,8 @@ else
     exit 1
 fi
 
+echo
+
 # $1 is interactive or none
 
 shopt -s globstar
@@ -37,7 +39,7 @@ for directory in $directories; do
             last_modification_seconds=$(stat --format=%Y "$file")
 
             # last mod since now in days
-            last_modification_in_days=$( ((current_seconds - last_modification_seconds) / 86400) )
+            last_modification_in_days=$(( ($current_seconds - $last_modification_seconds) / 86400 ))
             # Check if the file is older than the threshold
             if [ $last_modification_in_days -ge $days_threshold ]; then
                 read -r -a file_info <<<"$(wc -c "$file")"
@@ -63,7 +65,7 @@ if [[ $total_size -gt 10485760 && "$1" = "interactive" ]]; then
     else
         echo "Deletion aborted by user."
     fi
-elif [ "$1" = "scheduled" ]; then
+elif [[ "$1" = "interactive" || "$1" = "scheduled" ]]; then
     for file_data in "${files_to_delete[@]}"; do
         file_size=${file_data%% *}  # Extract size
         file_path=${file_data#* }  # Extract path
