@@ -53,7 +53,7 @@ fi
 if [[ $1 = "interactive" && $logExists = "true" ]]; then
 
     read -r -a last_log_entry <<<"$(tail -1 "/var/log/monitor.log" | cut -d ']' -f 2)"
-
+    
     difCPU=$(($cpu_usage - ${last_log_entry[0]}))
 
     if [ "$difCPU" -lt 0 ]; then
@@ -62,16 +62,19 @@ if [[ $1 = "interactive" && $logExists = "true" ]]; then
         trendCPU="rise"
     fi
 
-    difMEM=$(($MEMprecents - ${last_log_entry[1]}))
+    lastMem=${last_log_entry[1]}
+    lastMem=${lastMem::-1}
 
-    if [ "$difMEM" -lt 0 ]; then
+    difMEM=$(python3 -c "print(f'{${MEMprecents} - ${lastMem} :.2f}')")
+
+    if [[ "$difMEM" < 0 ]]; then
         trendMEM="fall"
     else
         trendMEM="rise"
     fi
     echo "Current system metrics:"
-    echo "CPU usage: $cpu_usage% , and the trend is a $trendCPU"
-    echo "Memory usage: current – $MEMprecents%, and the trend is a $trendMEM"
+    echo "CPU usage: $cpu_usage% , and the trend is a $trendCPU (compared to ${last_log_entry[0]})"
+    echo "Memory usage: current – $MEMprecents%, and the trend is a $trendMEM (compared to $lastMem)"
     echo "Tx/Rx bytes: $tx/$rx"
 else
     echo "$lineForLog" >>/var/log/monitor.log
