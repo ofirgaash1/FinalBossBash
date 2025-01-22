@@ -15,7 +15,6 @@ fi
 echo
 
 if command -v cowsay >/dev/null 2>&1; then
-    # If cowsay is installed, use it to say "Hello, world!"
     cowsay "let's monitor the hell out of your system."
 else
     echo 'I recommend installing cowsay for the full experience.'
@@ -65,8 +64,10 @@ if [[ $1 = "interactive" && $logExists = "true" ]]; then
 
     if [ "$difCPU" -lt 0 ]; then
         trendCPU="fall"
-    else
+    elif [ "$difCPU" -gt 0 ]; then
         trendCPU="rise"
+    else
+        trendCPU="constant"
     fi
 
     lastMem=${last_log_entry[1]}
@@ -74,18 +75,23 @@ if [[ $1 = "interactive" && $logExists = "true" ]]; then
 
     difMEM=$(python3 -c "print(f'{${MEMprecents} - ${lastMem} :.2f}')")
 
-    if [[ "$difMEM" < 0 ]]; then
+    if [ "$difMEM" -lt 0 ]; then
         trendMEM="fall"
-    else
+    elif [ "$difCPU" -gt 0 ]; then
         trendMEM="rise"
+    else
+        trendMEM="constant"
     fi
+
     echo "Current system metrics:"
     echo "CPU usage: $cpu_usage% , and the trend is a $trendCPU (compared to ${last_log_entry[0]})"
     echo "Memory usage: current – $MEMprecents%, and the trend is a $trendMEM (compared to $lastMem)"
     echo "Tx/Rx bytes: $tx/$rx"
+
+elif [[ $1 = interactive ]]; then
+    echo "$lineForLog"
 else
     echo "$lineForLog" >>/var/log/monitor.log
-    echo "$lineForLog"
 fi
 
 echo

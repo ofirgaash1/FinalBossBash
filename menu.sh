@@ -24,12 +24,10 @@ processes() {
 echo
 
 if command -v cowsay >/dev/null 2>&1; then
-    # If cowsay is installed, use it to say "Hello, world!"
     cowsay "Welcome, Vladimir! let's monitor, clean, and back-up the hell out of your system."
 else
     echo 'Welcome, Vladimir. I recommend installing cowsay for the full experience.'
 fi
-
 
 PS3='~Select an option habub: '
 options=(
@@ -59,6 +57,11 @@ select option in "${options[@]}"; do
         processes
         ;;
     "${options[5]}")
+        if command -v cowsay >/dev/null 2>&1; then
+            cowsay "I hope you had a freakin good time. Thank you for a really great course <3"
+        else
+            echo "I hope you had a freakin good time. Thank you for a really great course <3"
+        fi
         exit 0
         ;;
     esac

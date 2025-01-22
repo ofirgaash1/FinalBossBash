@@ -11,11 +11,12 @@ else
 fi
 
 if command -v cowsay >/dev/null 2>&1; then
-    # If cowsay is installed, use it to say "Hello, world!"
     cowsay "let's back-up the hell out of your system."
 else
     echo 'I recommend installing cowsay for the full experience.'
 fi
+
+mkdir -p /opt/sysmonitor/backups/
 
 for file in /opt/sysmonitor/backups/*; do
 
@@ -62,8 +63,8 @@ if [ "$1" = "manualBackup" ] || [ "$1" = "scheduled" ]; then
     format="+%Y_%m_%d_%H_%M_%S_home_backup.tar.gz"
     date_formated_string="$(date "$format")"
 
-    tar czf "/opt/sysmonitor/backups/$date_formated_string" --ignore-failed-read $TARGET 2>/dev/null 2>&1
-
+    tar -czf "/opt/sysmonitor/backups/$date_formated_string" --ignore-failed-read $TARGET >/dev/null 2>&1
+    echo "backup.sh: home backed-up successfully. $(date)"
     echo "backup.sh: home backed-up successfully. $(date)" >>/var/log/backup.log
 
 elif [ "$1" = "showLastFiveLogs" ]; then

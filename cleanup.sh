@@ -3,7 +3,6 @@
 echo
 
 if command -v cowsay >/dev/null 2>&1; then
-    # If cowsay is installed, use it to say "Hello, world!"
     cowsay "let's clean the hell out of your system."
 else
     echo 'I recommend installing cowsay for the full experience.'
