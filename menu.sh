@@ -18,17 +18,16 @@ else
 fi
 
 processes() {
-    echo "number of current processes running in the system: $(( $(ps auxh | wc -l) -2 ))"
+    echo "number of current processes running in the system: $(($(ps auxh | wc -l) - 2))"
 }
-
 
 echo 'Welcome stranger'
 PS3='~Select an option habub: '
 options=(
-    'view (monitor) the performance of the system' 
-    'show last 5 backup logs' 
-    'backup your home directory now (in addition to the regular scheduled backups)' 
-    'perform cleanup now (in addition to the regular scheduled cleanups)' 
+    'view (monitor) the performance of the system'
+    'show last 5 backup logs'
+    'backup your home directory now (in addition to the regular scheduled backups)'
+    'perform cleanup now (in addition to the regular scheduled cleanups)'
     'view current amount of running proccesses'
     'Quit'
 )
@@ -36,7 +35,7 @@ options=(
 select option in "${options[@]}"; do
     case $option in
     "${options[0]}")
-        /usr/local/bin/monitor.sh
+        /usr/local/bin/monitor.sh interactive
         ;;
     "${options[1]}")
         /usr/local/bin/backup.sh showLastFiveLogs
@@ -45,14 +44,13 @@ select option in "${options[@]}"; do
         /usr/local/bin/backup.sh manualBackup
         ;;
     "${options[3]}")
-        /usr/local/bin/cleanup.sh
+        /usr/local/bin/cleanup.sh interactive
         ;;
     "${options[4]}")
-        processes()
+        processes
         ;;
     "${options[5]}")
         exit 0
         ;;
     esac
 done
-
