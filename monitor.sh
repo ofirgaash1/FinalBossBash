@@ -2,6 +2,8 @@
 
 # $1 is interactive or none
 
+echo
+
 # Check if running as root
 if [ "$(id -u)" -eq 0 ]; then
     echo "Running as root."
@@ -71,3 +73,5 @@ else
     echo "$lineForLog" >>/var/log/monitor.log
     echo "$lineForLog"
 fi
+
+echo

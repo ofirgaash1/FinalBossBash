@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+echo
+
 # Check if running as root
 if [ "$(id -u)" -eq 0 ]; then
     echo "Running as root."
@@ -69,3 +71,5 @@ elif [ "$1" = "scheduled" ]; then
         rm "$file_path"
     done
 fi
+
+echo
