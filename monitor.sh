@@ -1,21 +1,63 @@
 #!/usr/bin/bash
 
+# $1 is interactive or none
+
 # Check if running as root
 if [ "$(id -u)" -eq 0 ]; then
     echo "Running as root."
-
-    # Check if the script is running interactively
-    if [[ -t 0 ]]; then
-        echo "Running interactively."
-        interactive=true
-    else
-        notInteractive=true
-    fi
 else
     echo "please run this script as root".
     exit 1
 fi
 
-if [ $notInteractive = "true" ]; then
-    
+# sed: stream editor
+# 2p: second line
+# free -b gives ram stats with a nice readable format
+# we save this to an array (IFS of spaces)
+read -r -a RAMstats <<<"$(sed -n 2p <<<"$(free -b)")"
+
+total_memory=${RAMstats[1]}
+used_memory=${RAMstats[2]}
+
+# no floats in bash so let's escape to python...
+MEMprecents=$(python3 -c "print(f'{${used_memory} * 100 / ${total_memory} :.2f}')")
+
+# same principle
+# sed: stream editor
+# 3p: third line
+# vmstat gives many stats including cpu with a nice readable format
+# we save this to an array (IFS of spaces)
+read -r -a cpu_usage_a <<<"$(vmstat | sed -n 3p)"
+idle_time="${cpu_usage_a[-3]}"
+cpu_usage=$((100 - $idle_time))
+
+for interface in /sys/class/net; do
+    if [[ -d /sys/class/net/$interface/device ]]; then
+        tx=$(<"/sys/class/net/$interface/statistics/rx_bytes")
+        rx=$(<"/sys/class/net/$interface/statistics/tx_bytes")
+    fi
+done
+
+lineForLog="[$(date)] $cpu_usage $MEMprecents% $tx $rx"
+
+if [ $1 = "interactive" ]; then
+    echo $lineForLog
+
+    read -r -a last_log_entry <<<"$(tail -1 "/var/log/monitor.log" | cut -d ']' -f 2)"
+
+    dif=$(($cpu_usage - ${last_log_entry[0]}))
+
+    if [[ "$dif" = -* ]]; then
+        trend="rise"
+    else
+        trend="fall"
+    fi
+
+    echo "Current system metrics:"
+    echo "CPU usage: $cpu_usage% , and the trend is $trend"
+    Memory usage: current – 17.21% trend - fall
+    Tx/Rx bytes: 29301743/3401238
+
+else
+    $lineForLog >>/var/log/monitor.log
 fi
