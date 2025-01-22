@@ -32,5 +32,10 @@ done
 ) | crontab -
 
 echo
-echo "done. try to run /usr/local/bin/menu.sh "
+if command -v cowsay >/dev/null 2>&1; then
+    # If cowsay is installed, use it to say "Hello, world!"
+    cowsay "done. try to run /usr/local/bin/menu.sh"
+else
+    echo "done. try to run /usr/local/bin/menu.sh"
+fi
 echo
