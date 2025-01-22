@@ -6,7 +6,7 @@
 if [ "$(id -u)" -eq 0 ]; then
     echo "Running as root."
 else
-    echo "please run this script as root".
+    echo "please run this script as root."
     exit 1
 fi
 
