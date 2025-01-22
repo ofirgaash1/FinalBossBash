@@ -16,7 +16,6 @@ for file in "${files[@]}"; do
     chmod +x "$prefix/$(basename "$file")"
 done
 
-
 # create cron jobs
 (
     # print existing crontab

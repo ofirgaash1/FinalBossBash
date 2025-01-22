@@ -17,7 +17,7 @@ for file in /opt/sysmonitor/backups/*; do
         last_modification_seconds=$(stat --format=%Y "$file")
 
         current_seconds=$(date +%s)
-        
+
         # last mod since now in days
         last_modification_in_days=$(((current_seconds - last_modification_seconds) / 86400))
 
@@ -30,7 +30,6 @@ for file in /opt/sysmonitor/backups/*; do
 done
 
 if [ "$1" = "manualBackup" ] || [ "$1" = "scheduled" ]; then
-
 
     TARGET='/home'
 
