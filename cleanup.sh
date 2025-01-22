@@ -23,7 +23,7 @@ declare -a files_to_delete
 total_size=0
 
 # directories mentioned by vlad, seperated by spaces
-directories="/tmp /var/tm /var/log"
+directories="/tmp /var/tmp /var/log"
 
 for directory in $directories; do
     for file in "$directory"/**; do
