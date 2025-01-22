@@ -48,17 +48,17 @@ if [ $1 = "interactive" ]; then
     difCPU=$(($cpu_usage - ${last_log_entry[0]}))
 
     if [[ "$difCPU" = -* ]]; then
-        trendCPU="rise"
-    else
         trendCPU="fall"
+    else
+        trendCPU="rise"
     fi
 
     difMEM=$(($MEMprecents - ${last_log_entry[1]}))
 
     if [[ "$difMEM" = -* ]]; then
-        trendMEM="rise"
-    else
         trendMEM="fall"
+    else
+        trendMEM="rise"
     fi
     echo "Current system metrics:"
     echo "CPU usage: $cpu_usage% , and the trend is a $trendCPU"
