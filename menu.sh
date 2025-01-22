@@ -18,7 +18,7 @@ else
 fi
 
 processes() {
-    echo "number of current processes running in the system: $(($(ps auxh | wc -l) - 2))"
+    echo "number of current processes running in the system: $(($(ps auxh | wc -l) - 1))" # Vlad, I know u said 2
 }
 
 echo
