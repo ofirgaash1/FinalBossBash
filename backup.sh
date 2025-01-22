@@ -10,7 +10,7 @@ else
     exit 1
 fi
 
-for file in /opt/sysmonitor/backups/; do
+for file in /opt/sysmonitor/backups/*; do
 
     # Continue only if it is a file
     if [ -f "$file" ]; then
@@ -18,6 +18,8 @@ for file in /opt/sysmonitor/backups/; do
         # last mod in sec since the epoch.    VLAD - NOTE THAT %Y CHANGES WHEN *DATA* IS MODIFIED, NOT METADATA
         last_modification_seconds=$(stat --format=%Y "$file")
 
+        current_seconds=$(date +%s)
+        
         # last mod since now in days
         last_modification_in_days=$(((current_seconds - last_modification_seconds) / 86400))
 
