@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+echo
+
 prefix="/usr/local/bin"
 
 # Check if running as root
@@ -10,8 +12,11 @@ else
     exit 1
 fi
 
+echo
+
 files=('./menu.sh' './backup.sh' './cleanup.sh' './monitor.sh')
 for file in "${files[@]}"; do
+    echo "copying $file to $prefix and granting 777 permissions"
     cp $file $prefix
     chmod +x "$prefix/$(basename "$file")"
 done
@@ -25,3 +30,7 @@ done
     echo "0 1 4,20 * * $prefix/backup.sh scheduled"
     echo "0 1 1 * * $prefix/cleanup.sh scheduled"
 ) | crontab -
+
+echo
+echo "done. try to run /usr/local/bin/menu.sh "
+echo

@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+echo
+
 # Check if running as root
 if [ "$(id -u)" -eq 0 ]; then
     # Check if the script is running interactively
@@ -53,3 +55,5 @@ select option in "${options[@]}"; do
         ;;
     esac
 done
+
+echo
