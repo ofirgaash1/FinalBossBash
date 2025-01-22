@@ -28,7 +28,7 @@ options=(
     'show last 5 backup logs'
     'backup your home directory now (in addition to the regular scheduled backups)'
     'perform cleanup now (in addition to the regular scheduled cleanups)'
-    'view current amount of running proccesses'
+    'view current amount of running processes'
     'Quit'
 )
 
