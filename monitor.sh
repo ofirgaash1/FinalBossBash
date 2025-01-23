@@ -77,7 +77,7 @@ if [[ $1 = "interactive" && $logExists = "true" ]]; then
 
     if [ "$difMEM" -lt 0 ]; then
         trendMEM="fall"
-    elif [ "$difCPU" -gt 0 ]; then
+    elif [ "$difMEM" -gt 0 ]; then
         trendMEM="rise"
     else
         trendMEM="constant"
