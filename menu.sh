@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+clear
 echo
 
 # Check if running as root
@@ -7,13 +7,12 @@ if [ "$(id -u)" -eq 0 ]; then
     # Check if the script is running interactively
     if [[ -t 0 ]]; then
         echo "Running interactively as root."
-        interactive=true
     else
         echo "the menu can only run interactively"
         exit 1
     fi
 else
-    echo "please run this script as root".
+    echo "please run this script as root."
     exit 1
 fi
 
