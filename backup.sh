@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+clear
 echo
 
 # Check if running as root
@@ -61,9 +62,9 @@ if [ "$1" = "manualBackup" ] || [ "$1" = "scheduled" ]; then
     fi
 
     format="+%Y_%m_%d_%H_%M_%S_home_backup.tar.gz"
-    date_formated_string="$(date "$format")"
+    date_formatted_string="$(date "$format")"
 
-    tar -czf "/opt/sysmonitor/backups/$date_formated_string" --ignore-failed-read $TARGET >/dev/null 2>&1
+    tar -czf "/opt/sysmonitor/backups/$date_formatted_string" --ignore-failed-read $TARGET >/dev/null 2>&1
     echo "backup.sh: home backed-up successfully. $(date)"
     echo "backup.sh: home backed-up successfully. $(date)" >>/var/log/backup.log
 
