@@ -33,9 +33,21 @@ done
 ) | crontab -
 
 echo
+
 if command -v cowsay >/dev/null 2>&1; then
-    cowsay "done. try to run /usr/local/bin/menu.sh"
+    cowsay "Done. Try to run /usr/local/bin/menu.sh"
 else
-    echo "done. i recommend installing cowsay. now try to run /usr/local/bin/menu.sh"
+    echo "Done. I recommend installing cowsay. Now try to run /usr/local/bin/menu.sh"
 fi
+
+echo
+
+read -p "Do you want to proceed to the menu? (yes/no) " user_input
+if [[ "$user_input" == "yes" ]]; then
+    /usr/local/bin/menu.sh
+else
+    echo "Exiting."
+    exit 0
+fi
+
 echo
