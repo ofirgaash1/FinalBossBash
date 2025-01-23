@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # $1 is interactive or none
-
+clear
 echo
 
 # Check if running as root
@@ -41,14 +41,19 @@ read -r -a cpu_usage_a <<<"$(vmstat | sed -n 3p)"
 idle_time="${cpu_usage_a[-3]}"
 cpu_usage=$((100 - $idle_time))
 
+total_tx=0
+total_rx=0
+
 for interface in /sys/class/net/*; do
     if [[ -d $interface/device ]]; then
         tx=$(<"$interface/statistics/tx_bytes")
         rx=$(<"$interface/statistics/rx_bytes")
+        total_tx=$((total_tx + tx))
+        total_rx=$((total_rx + rx))
     fi
 done
 
-lineForLog="[$(date)] $cpu_usage $MEMprecents% $tx $rx"
+lineForLog="[$(date)] $cpu_usage $MEMprecents% $total_tx $total_rx"
 
 # -s option returns true when file exists and not empty
 logExists="false"
@@ -86,7 +91,7 @@ if [[ $1 = "interactive" && $logExists = "true" ]]; then
     echo "Current system metrics:"
     echo "CPU usage: $cpu_usage% , and the trend is a $trendCPU (compared to ${last_log_entry[0]})"
     echo "Memory usage: current – $MEMprecents%, and the trend is a $trendMEM (compared to $lastMem)"
-    echo "Tx/Rx bytes: $tx/$rx"
+    echo "Tx/Rx bytes: $total_tx/$total_rx"
 
 elif [[ $1 = interactive ]]; then
     echo "$lineForLog"
