@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+clear
 echo
 
 prefix="/usr/local/bin"
