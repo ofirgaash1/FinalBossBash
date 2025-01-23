@@ -74,7 +74,7 @@ elif [ "$1" = "showLastFiveLogs" ]; then
 
     # -s option returns true when file exists and not empty
     if [[ ! -s "$file_name" ]]; then
-        echo "$file_name doesn't exist or is empty"
+        echo "$file_name doesn't exist or is empty because no backups have been made yet."
     else
         # tail command gets lines from the end of the file
         tail -5 "$file_name"
