@@ -80,17 +80,17 @@ if [[ $1 = "interactive" && $logExists = "true" ]]; then
 
     difMEM=$(python3 -c "print(f'{${MEMprecents} - ${lastMem} :.2f}')")
 
-    if [ "$difMEM" -lt 0 ]; then
+    if (( $(echo "$difMEM < 0" | bc -l) )); then
         trendMEM="fall"
-    elif [ "$difMEM" -gt 0 ]; then
+    elif (( $(echo "$difMEM > 0" | bc -l) )); then
         trendMEM="rise"
     else
         trendMEM="constant"
     fi
 
     echo "Current system metrics:"
-    echo "CPU usage: $cpu_usage% , and the trend is a $trendCPU (compared to ${last_log_entry[0]})"
-    echo "Memory usage: current – $MEMprecents%, and the trend is a $trendMEM (compared to $lastMem)"
+    echo "CPU usage: $cpu_usage% , and the trend is a $trendCPU (compared to ${last_log_entry[0]}%)"
+    echo "Memory usage: current – $MEMprecents%, and the trend is a $trendMEM (compared to $lastMem%)"
     echo "Tx/Rx bytes: $total_tx/$total_rx"
 
 elif [[ $1 = interactive ]]; then
