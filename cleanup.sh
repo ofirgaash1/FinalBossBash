@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+clear
 echo
 
 if command -v cowsay >/dev/null 2>&1; then
@@ -78,5 +79,5 @@ elif [[ "$1" = "interactive" || "$1" = "scheduled" ]]; then
 fi
 
 echo
-echo "cleanup done doing it's thing"
+echo "cleanup done doing its thing"
 echo
