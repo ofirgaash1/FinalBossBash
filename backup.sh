@@ -75,7 +75,7 @@ back() {
     echo "backup.sh: home backed-up successfully. $(date)" >>/var/log/backup.log
 }
 
-if [ isInteractive = "interactive" ]; then
+if [ "$isInteractive" = "interactive" ]; then
 
     if [ "$1" = "showLastFiveLogs" ]; then
         file_name='/var/log/backup.log'
