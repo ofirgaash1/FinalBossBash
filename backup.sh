@@ -7,7 +7,7 @@ echo
 if [ "$(id -u)" -eq 0 ]; then
     echo "Running as root."
 else
-    echo "please run this script as root."
+    echo "Please run this script as root."
     exit 1
 fi
 
@@ -41,13 +41,13 @@ for file in /opt/sysmonitor/backups/*; do
 
         # Check if the file is older than the threshold
         if [ $last_modification_in_days -ge 7 ]; then
-            rm $file
+            rm "$file"
         fi
 
     fi
 done
 
-back() {
+backup() {
     TARGET='/home'
 
     # Read total size in bytes of a directory into array
@@ -57,10 +57,11 @@ back() {
 
     echo "$TARGET directory is overall $dir_size_in_bytes bytes"
 
-    available_free_space_in_bytes=$(df -B 1 --output=avail / | tail -1)
+    # tail command gets lines from the end of the file
+    available_free_space_in_bytes="$(df -B 1 --output=avail / | tail -1)"
     echo "You have total $available_free_space_in_bytes free bytes on /"
 
-    if [ $dir_size_in_bytes -gt $available_free_space_in_bytes ]; then
+    if [ "$dir_size_in_bytes" -gt "$available_free_space_in_bytes" ]; then
         echo "backup.sh: not enough space for a backup. $(date)" >>/var/log/backup.log
         echo "backup.sh: not enough space for a backup. $(date) (logged)"
         echo
@@ -68,9 +69,13 @@ back() {
     fi
 
     format="+%Y_%m_%d_%H_%M_%S_home_backup.tar.gz"
-    date_formatted_string="$(date "$format")"
+    date_formatted_string="$(date +"$format")"
 
-    tar -czf "/opt/sysmonitor/backups/$date_formatted_string" --ignore-failed-read $TARGET >/dev/null 2>&1
+    if ! tar -czf "/opt/sysmonitor/backups/$date_formatted_string" -C "$TARGET" . --ignore-failed-read 2>>/var/log/backup.log; then
+        echo "backup.sh: error occurred during backup. $(date)" >>/var/log/backup.log
+        echo "backup.sh: error occurred during backup. $(date)"
+        exit 1
+    fi
     echo "backup.sh: home backed-up successfully. $(date)"
     echo "backup.sh: home backed-up successfully. $(date)" >>/var/log/backup.log
 }
@@ -84,15 +89,15 @@ if [ "$isInteractive" = "interactive" ]; then
         if [[ ! -s "$file_name" ]]; then
             echo "$file_name doesn't exist or is empty because no backups have been made yet."
         else
-            # tail command gets lines from the end of the file
             tail -5 "$file_name"
         fi
-
+    fi
+    
     elif [ "$1" = "manualBackup" ]; then
-        back
+        backup
     fi
 else
-    back
+    backup
 fi
 
 echo
