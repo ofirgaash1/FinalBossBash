@@ -13,13 +13,19 @@ fi
 if [ "$(id -u)" -eq 0 ]; then
     echo "Running as root."
 else
-    echo "please run this script as root"
+    echo "Please run this script as root"
     exit 1
+fi
+
+isInteractive=""
+if [[ -t 0 ]]; then
+    isInteractive="interactive"
+else
+    isInteractive="none"
 fi
 
 echo
 
-# $1 is interactive or none
 
 shopt -s globstar
 
@@ -27,6 +33,9 @@ shopt -s globstar
 days_threshold=17
 
 seconds_threshold=$((days_threshold * 86400))
+
+# Threshold for total size in bytes (10 MiB)
+TEN_MIB=10485760
 
 declare -a files_to_delete
 total_size=0
@@ -59,19 +68,18 @@ for directory in $directories; do
     done
 done
 
-# Check total size against threshold of 10 MiB (10485760 bytes)
-if [[ $total_size -gt 10485760 && "$1" = "interactive" ]]; then
-    echo "Total size of old files to delete is greater than 10 MiB."
-    read -p "Are you sure you want to delete these files? (yes/no) " user_input
-    if [[ "$user_input" == "yes" ]]; then
-        for file in "${files_to_delete[@]}"; do
-            echo "Deleting $file."
-            rm "$file"
-        done
-    else
-        echo "Deletion aborted by user."
-    fi
-elif [[ "$1" = "interactive" || "$1" = "scheduled" ]]; then
+if [[ "$isInteractive" == "interactive" && $total_size -gt $TEN_MIB ]]; then
+        echo "Total size of old files to delete is greater than 10 MiB."
+        read -p "Are you sure you want to delete these files? (yes/no) " user_input
+        if [[ "$user_input" == "yes" ]]; then
+            for file in "${files_to_delete[@]}"; do
+                echo "Deleting $file."
+                rm "$file"
+            done
+        else
+            echo "Deletion aborted by user."
+        fi
+else
     for file in "${files_to_delete[@]}"; do
         echo "Deleting $file."
         rm "$file"

@@ -50,7 +50,7 @@ select option in "${options[@]}"; do
         /usr/local/bin/backup.sh manualBackup
         ;;
     "${options[3]}")
-        /usr/local/bin/cleanup.sh interactive
+        /usr/local/bin/cleanup.sh
         ;;
     "${options[4]}")
         processes
