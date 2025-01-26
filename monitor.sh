@@ -16,6 +16,7 @@ if [[ -t 0 ]]; then
 else
     isInteractive="none"
 fi
+
 echo
 
 if command -v cowsay >/dev/null 2>&1; then
