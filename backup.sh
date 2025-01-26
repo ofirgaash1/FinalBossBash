@@ -91,7 +91,6 @@ if [ "$isInteractive" = "interactive" ]; then
         else
             tail -5 "$file_name"
         fi
-    fi
     
     elif [ "$1" = "manualBackup" ]; then
         backup
