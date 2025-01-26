@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# $1 is interactive or none
 clear
 echo
 
@@ -12,6 +11,11 @@ else
     exit 1
 fi
 
+if [[ -t 0 ]]; then
+    isInteractive="interactive"
+else
+    isInteractive="none"
+fi
 echo
 
 if command -v cowsay >/dev/null 2>&1; then
@@ -61,10 +65,10 @@ if [[ -s "/var/log/monitor.log" ]]; then
     logExists="true"
 fi
 
-if [[ $1 = "interactive" && $logExists = "true" ]]; then
+if [[ $isInteractive = "interactive" && $logExists = "true" ]]; then
 
     read -r -a last_log_entry <<<"$(tail -1 "/var/log/monitor.log" | cut -d ']' -f 2)"
-    
+
     difCPU=$(($cpu_usage - ${last_log_entry[0]}))
 
     if [ "$difCPU" -lt 0 ]; then
@@ -93,7 +97,7 @@ if [[ $1 = "interactive" && $logExists = "true" ]]; then
     echo "Memory usage: current – $MEMprecents%, and the trend is a $trendMEM (compared to $lastMem%)"
     echo "Tx/Rx bytes: $total_tx/$total_rx"
 
-elif [[ $1 = interactive ]]; then
+elif [[ $isInteractive = interactive ]]; then
     echo "$lineForLog"
 else
     echo "$lineForLog" >>/var/log/monitor.log
