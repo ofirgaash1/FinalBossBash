@@ -51,7 +51,7 @@ if [ "$1" = "manualBackup" ] || [ "$1" = "scheduled" ]; then
 
     echo "$TARGET directory is overall $dir_size_in_bytes bytes"
 
-    available_free_space_in_bytes=$(df --output=avail / | tail -1)
+    available_free_space_in_bytes=$(df -B 1 --output=avail / | tail -1)
     echo "You have total $available_free_space_in_bytes free bytes on /"
 
     if [ $dir_size_in_bytes -gt $available_free_space_in_bytes ]; then
