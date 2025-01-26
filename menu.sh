@@ -41,7 +41,7 @@ options=(
 select option in "${options[@]}"; do
     case $option in
     "${options[0]}")
-        /usr/local/bin/monitor.sh interactive
+        /usr/local/bin/monitor.sh
         ;;
     "${options[1]}")
         /usr/local/bin/backup.sh showLastFiveLogs
