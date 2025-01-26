@@ -98,7 +98,7 @@ if [[ $isInteractive = "interactive" && $logExists = "true" ]]; then
     echo "Memory usage: current – $MEMprecents%, and the trend is a $trendMEM (compared to $lastMem%)"
     echo "Tx/Rx bytes: $total_tx/$total_rx"
 
-elif [[ $isInteractive = interactive ]]; then
+elif [[ $isInteractive = "interactive" ]]; then
     echo "$lineForLog"
 else
     echo "$lineForLog" >>/var/log/monitor.log
