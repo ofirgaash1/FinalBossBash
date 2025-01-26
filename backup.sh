@@ -11,6 +11,13 @@ else
     exit 1
 fi
 
+isInteractive=""
+if [[ -t 0 ]]; then
+    isInteractive="interactive"
+else
+    isInteractive="none"
+fi
+
 if command -v cowsay >/dev/null 2>&1; then
     cowsay "let's back-up the hell out of your system."
 else
@@ -40,8 +47,7 @@ for file in /opt/sysmonitor/backups/*; do
     fi
 done
 
-if [ "$1" = "manualBackup" ] || [ "$1" = "scheduled" ]; then
-
+back() {
     TARGET='/home'
 
     # Read total size in bytes of a directory into array
@@ -55,7 +61,7 @@ if [ "$1" = "manualBackup" ] || [ "$1" = "scheduled" ]; then
     echo "You have total $available_free_space_in_bytes free bytes on /"
 
     if [ $dir_size_in_bytes -gt $available_free_space_in_bytes ]; then
-        echo "backup.sh: not enough space for a backup. $(date)" >> /var/log/backup.log
+        echo "backup.sh: not enough space for a backup. $(date)" >>/var/log/backup.log
         echo "backup.sh: not enough space for a backup. $(date) (logged)"
         echo
         exit 1
@@ -67,18 +73,26 @@ if [ "$1" = "manualBackup" ] || [ "$1" = "scheduled" ]; then
     tar -czf "/opt/sysmonitor/backups/$date_formatted_string" --ignore-failed-read $TARGET >/dev/null 2>&1
     echo "backup.sh: home backed-up successfully. $(date)"
     echo "backup.sh: home backed-up successfully. $(date)" >>/var/log/backup.log
+}
 
-elif [ "$1" = "showLastFiveLogs" ]; then
+if [ isInteractive = "interactive" ]; then
 
-    file_name='/var/log/backup.log'
+    if [ "$1" = "showLastFiveLogs" ]; then
+        file_name='/var/log/backup.log'
 
-    # -s option returns true when file exists and not empty
-    if [[ ! -s "$file_name" ]]; then
-        echo "$file_name doesn't exist or is empty because no backups have been made yet."
-    else
-        # tail command gets lines from the end of the file
-        tail -5 "$file_name"
+        # -s option returns true when file exists and not empty
+        if [[ ! -s "$file_name" ]]; then
+            echo "$file_name doesn't exist or is empty because no backups have been made yet."
+        else
+            # tail command gets lines from the end of the file
+            tail -5 "$file_name"
+        fi
+
+    elif [ "$1" = "manualBackup" ]; then
+        back
     fi
+else
+    back
 fi
 
 echo
