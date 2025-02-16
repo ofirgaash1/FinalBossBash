@@ -27,9 +27,9 @@ done
     # print existing crontab
     crontab -l 2>/dev/null
 
-    echo "0 * * * * $prefix/monitor.sh scheduled"
-    echo "0 1 4,20 * * $prefix/backup.sh scheduled"
-    echo "0 1 1 * * $prefix/cleanup.sh scheduled"
+    echo "0 * * * * $prefix/monitor.sh"
+    echo "0 1 4,20 * * $prefix/backup.sh"
+    echo "0 1 1 * * $prefix/cleanup.sh"
 ) | crontab -
 
 echo
